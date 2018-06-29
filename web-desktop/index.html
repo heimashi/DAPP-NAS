@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>套个圈</title>
+  <title>套个圈星云链游戏 区块链游戏 NAS免费领取</title>
 
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -25,21 +25,55 @@
   <script src="./libs/nebulas.js"></script>
 
 </head>
-<body>
-<!-- <h1 class="header">tgq</h1> -->
-  <div id="app" style="float: left; width:430px;">
-    <el-card shadow="always" style="margin: 10px 10px 15px 15px">
-          套个圈星云链游戏介绍
-          \n1.fsfs
-          \n2.沙发上
-    </el-card>
-    <el-button @click="open1">Button1</el-button>
-    <el-button @click="open2">Button2</el-button>
-    <el-dialog :visible.sync="visible" title="Hello world">
-      <p>Try Element</p>
-    </el-dialog>
+<body style="background-color:#EBEEF5">
+  <div id="app" >
+    <div id="app-left" style="float: left;">
+        <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
+            <div style="display: flex; flex-direction: column; align-items: flex-start">
+                <el-button type="text" style="font-size: 25px; color: black;">套个圈玩法说明</el-button>
+                <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
+                  
+                </el-card>
+            </div>
+    </div>
+    <div id="app-right" style="float: right;">
+        <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
+            <div style="display: flex; flex-direction: column; align-items: flex-start">
+                <el-button type="text" style="font-size: 25px; color: black;">套个圈操作区</el-button>
+                <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
+                  <div>
+                    <el-button type="text" style="font-size: 16px; padding: 5px; color: #606266">NAS仓库池：{{tgqCount}}</el-button>
+                    <el-button @click="getTgqPool" icon="el-icon-refresh" type="primary" size="mini" style="background-color: black" circle></el-button>
+                  </div>
+                  <div>
+                    <el-button type="text" style="font-size: 16px; padding: 5px; color: #606266">NAS累积奖金池：{{bonusCount}}</el-button>
+                    <el-button @click="getBonusPool" icon="el-icon-refresh" type="primary" size="mini" style="background-color: black" circle></el-button>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 70px">
+                    <el-button type="text" style="font-size: 18px; color:#000000;">捐赠到NAS仓库池:</el-button>
+                    <div style="margin-left: 0px">
+                      <el-input v-model="inputDonate" placeholder="捐赠NAS数量"  style="width: 120px;"></el-input>
+                      <el-button @click="donateClick" type="primary" size="medium" style="background-color: black">捐赠</el-button>
+                    </div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 70px">
+                    <div>
+                        <el-button type="text" style="font-size: 18px; color:#000000;">免费领取NAS:</el-button>
+                        <el-button type="text" style="font-size: 13px; color:#909399;">（每隔一小时可以领取一次）</el-button>
+                    </div>
+                    
+                    <div style="margin-left: 0px">
+                      <el-input :disabled="true" placeholder="免费领取0.0005NAS"  style="width: 180px;"></el-input>
+                      <el-button @click="claimClick" type="primary" size="medium" style="background-color: black">领取</el-button>
+                    </div>
+                  </div>
+                </el-card>
+            </div>
+        </el-card>
+        
+    </div>
   </div>
-  <div id="GameDiv" style="width:400px; height: 720px; margin-left: 440px;">
+  <div id="GameDiv" style="width:400px; height: 720px; float: center; margin-top: 20px">
     <canvas id="GameCanvas" width="400" height="720"></canvas>
     <div id="splash">
       <div class="progress-bar stripes">
@@ -49,93 +83,252 @@
   </div>
   
   
-
-
-
-<!-- <p class="footer">Created with <a href="http://cocos.com/cocoscreator" title="cocos creator">Cocos Creator</a></p> -->
-
 <script src="src/settings.js" charset="utf-8"></script>
 <script src="main.js" charset="utf-8"></script>
 <script>
-    "use strict";
-    var dappContactAddress = "n1ov7Z5oix23riQKUaVensFie5Tr5UiGmBT";
+      "use strict";
+      var dappContactAddress = "n1nf9f4HtJoyVnChZi8cJxT24bEf5UBRZSA";
       var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
-      neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))
+      neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))//"https://mainnet.nebulas.io"
   
   
       var NebPay = require("nebpay"); 
       var nebPay = new NebPay();
-      var serialNumber
-      function test11(that){
-        that.$message('这是一条消息提示');
+      var serialNumber;
+      var intervalQuery;
+      var tgqLoading;
 
+      function callNeb(callFunction, callArgs, success, error){
         var from = dappContactAddress
         var value = "0";
         var nonce = "0"
         var gas_price = "1000000"
         var gas_limit = "2000000"
-        var callFunction = "get";
-        var input = "给初学者的一封公开信"
-        var callArgs = "[\"" + input + "\"]";
-        console.log(callArgs);
         var contract = {
             "function": callFunction,
             "args": callArgs
         }
+        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract)
+          .then(success)
+          .catch(error)
+      }
 
-
-        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(function (resp) {
-            var result = resp.result;
-            
-            if (result === 'null') {
-                that.$message("没有发现该标题公开信，你可以立即写一篇！");
-                return;
+      function donateTgq(that){
+        var value = that.inputDonate;
+        if(value<=0){
+          that.$message("捐赠数额需要大于0");
+          return;
+        }
+        var to = dappContactAddress;
+        var callArgs = "[]";
+        serialNumber = nebPay.call(to, value, "donateTgq", callArgs, {
+            listener: function (resp) {
+                console.log("+++" + resp)
+                that.$message("捐赠成功 稍后刷新"+resp);
             }
-            console.log(result);
-            result = JSON.parse(result);
-            var textStr = result.title+" 作者：" + result.author+" 正文:  " + result.content
-            console.log(textStr)
-            that.$message(textStr);
+        });
+      }
 
-        }).catch(function (err) {
-            console.log("error :" + err.message);
+      function tgqTryToPlayGame(value){ 
+        vueInstance.$confirm("转入0.01NAS来赢取更多NAS！得分与区块链上的随机数之和为10的倍数就获奖（详细规则参考左侧说明）", '套个圈获得了'+value+'分！', {
+          confirmButtonText: '开始区块链游戏',
+          cancelButtonText: '取消',
+          type: 'success',
+          center: true
+        }).then(function(){
+          tgqPlay(value)
+        }).catch(function(){
+          
+        });
+      }
 
+      
+      function tgqPlay(point){
+        var value = '0.0001'
+        var that = vueInstance
+        var to = dappContactAddress;
+        var callArgs = "[\""+point+"\"]";
+        var options = {
+              //callback: NebPay.config.mainnetUrl //在主网查询(默认值)
+              callback: NebPay.config.testnetUrl, //在测试网查询
+              qrcode: {
+                    showQRCode: false
+                },
+              listener: function(resp){
+                  console.log("---",resp)
+                }
+        }
+        serialNumber = nebPay.call(to, value, "tgq", callArgs, options);
+        tgqLoading = that.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        intervalQuery = setInterval(function() {
+                funcIntervalQuery();
+            }, 7000);
+      }
+
+      function funcIntervalQuery() {
+            var options = {
+              //callback: NebPay.config.mainnetUrl //在主网查询(默认值)
+              callback: NebPay.config.testnetUrl, //在测试网查询
+            }
+            nebPay.queryPayInfo(serialNumber,options)   //search transaction result from server (result upload to server by app)
+                .then(function (resp) {
+                    console.log("tx result: " + resp) //resp is a JSON string
+                    var respObject = JSON.parse(resp)
+                    if(respObject.code === 0 && respObject.data.status === 2){
+                      vueInstance.$message("等待写入区块链，请稍等...");
+                    }
+                    else if(respObject.code === 0 && respObject.data.status === 1) {
+                        clearInterval(intervalQuery);
+                        vueInstance.$message("交易成功！");
+                        if(tgqLoading){
+                          tgqLoading.close()
+                        }
+                        getPointByHash(respObject.data.hash)
+                    }
+                    else if(respObject.code === 0 && respObject.data.status === 0) {
+                        clearInterval(intervalQuery);
+                        if(tgqLoading){
+                          tgqLoading.close()
+                        }
+                    }
+                })
+                .catch(function (err) {
+                  if(tgqLoading){
+                    tgqLoading.close()
+                  }
+                    console.log(err);
+                });
+      }
+
+
+      function claimNas(that){
+        var value = '0'
+        var to = dappContactAddress;
+        var callArgs = "[]";
+        serialNumber = nebPay.call(to, value, "claimFree", callArgs, {
+            listener: function (resp) {
+                console.log("+++" + resp)
+                that.$message("领取成功 "+resp);
+                vueInstance.getTgqPool()
+            }
+        });
+      }
+
+      function getPointByHash(hash){
+        var callArgs = "[\""+hash+"\"]";
+        callNeb("getPoint", callArgs, function (resp) {
+            console.log("RESULT::", resp)
+            console.log("RESULT2::", resp.result)
+            var point = resp.result;
+            var resultStr = point;
+            if(point%10===0){
+              resultStr+="  恭喜你中了三等奖！NAS已发放"
+              vueInstance.getTgqPool()
+            }else if(point%100===0){
+              resultStr+="  恭喜你中了二等奖！！NAS已发放"
+              vueInstance.getTgqPool()
+              vueInstance.getBonusPool()
+            }else if(point%1000===0){
+              resultStr+="  恭喜你中了一等奖！！！NAS已发放"
+              vueInstance.getTgqPool()
+              vueInstance.getBonusPool()
+            } else{
+              resultStr+="  很遗憾未中奖"
+            }
+            vueInstance.$message("最终分数："+resultStr);
+            
+        }, function (err) {
+          console.log("+++++++++++--ee")
         })
       }
 
-      function test12(that){
-        var to = dappContactAddress;
-        var value = "0";
-        var callFunction = "save";
-        var inputTitle = "aaa", inputContent = "aaabbbbccc"
-        var callArgs = "[\"" + inputTitle + "\",\"" + inputContent + "\"]";
-        console.log(callArgs);
-
-        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
-            listener: function (resp) {
-                console.log("thecallback is " + resp)
-                that.$message(resp);
-            }
+      function callGetTgqPool(that){
+        const loading = that.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
         });
+        
+        var callArgs = "[]";
+        callNeb("getTgqPool", callArgs, function (resp) {
+            var result = resp.result;
+            loading.close();
+            if (result === 'null') {
+                that.$message("获取套个圈NAS池失败");
+                return;
+            }
+            result = JSON.parse(result);
+            that.tgqCount = result
+        }, function (err) {
+            loading.close();
+            that.$message("获取套个圈Nas池失败");
+            console.log("error :" + err.message);
+        })
+      }
+
+      function callGetBonusPool(that){
+        const loading = that.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        
+        var callArgs = "[]";
+        callNeb("getBonusPoll", callArgs, function (resp) {
+            var result = resp.result;
+            loading.close();
+            if (result === 'null') {
+                that.$message("获取套个圈NAS累积奖金池失败");
+                return;
+            }
+            result = JSON.parse(result);
+            that.bonusCount = result
+        }, function (err) {
+            loading.close();
+            that.$message("获取套个圈Nas累积奖金池失败");
+            console.log("error :" + err.message);
+        })
       }
   
    
 </script>
 <script>
-  new Vue({
+  this.vueInstance = new Vue({
     el: '#app',
     data: function() {
-      return { visible: false }
+      return { 
+        visible: false,
+        inputDonate: "",
+        bonusCount : "加载中...",
+        tgqCount : "加载中...",
+       }
     },
     methods: {
-      open1() {
-        test11(this)
+      getTgqPool() {
+        callGetTgqPool(this)
       },
-      open2() {
-        test12(this)
+      getBonusPool() {
+        callGetBonusPool(this)
       },
-      
+      donateClick(){
+        donateTgq(this)
+      },
+      claimClick(){
+        claimNas(this)
+      }
+    },
+    mounted() {
+      this.getTgqPool();
+      this.getBonusPool();
     }
+
   })
 </script>
 
