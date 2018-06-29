@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>套个圈</title>
+
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="full-screen" content="yes"/>
+  <meta name="screen-orientation" content="portrait"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  
+  <link rel="stylesheet" type="text/css" href="style-desktop.css"/>
+  <!-- vue element -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="./libs/nebPay.js"></script>
+  <script src="./libs/nebulas.js"></script>
+
+</head>
+<body>
+<!-- <h1 class="header">tgq</h1> -->
+  <div id="app" style="float: left; width:430px;">
+    <el-card shadow="always" style="margin: 10px 10px 15px 15px">
+          套个圈星云链游戏介绍
+          \n1.fsfs
+          \n2.沙发上
+    </el-card>
+    <el-button @click="open1">Button1</el-button>
+    <el-button @click="open2">Button2</el-button>
+    <el-dialog :visible.sync="visible" title="Hello world">
+      <p>Try Element</p>
+    </el-dialog>
+  </div>
+  <div id="GameDiv" style="width:400px; height: 720px; margin-left: 440px;">
+    <canvas id="GameCanvas" width="400" height="720"></canvas>
+    <div id="splash">
+      <div class="progress-bar stripes">
+        <span style="width: 0%"></span>
+      </div>
+    </div>
+  </div>
+  
+  
+
+
+
+<!-- <p class="footer">Created with <a href="http://cocos.com/cocoscreator" title="cocos creator">Cocos Creator</a></p> -->
+
+<script src="src/settings.js" charset="utf-8"></script>
+<script src="main.js" charset="utf-8"></script>
+<script>
+    "use strict";
+    var dappContactAddress = "n1ov7Z5oix23riQKUaVensFie5Tr5UiGmBT";
+      var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+      neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))
+  
+  
+      var NebPay = require("nebpay"); 
+      var nebPay = new NebPay();
+      var serialNumber
+      function test11(that){
+        that.$message('这是一条消息提示');
+
+        var from = dappContactAddress
+        var value = "0";
+        var nonce = "0"
+        var gas_price = "1000000"
+        var gas_limit = "2000000"
+        var callFunction = "get";
+        var input = "给初学者的一封公开信"
+        var callArgs = "[\"" + input + "\"]";
+        console.log(callArgs);
+        var contract = {
+            "function": callFunction,
+            "args": callArgs
+        }
+
+
+        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(function (resp) {
+            var result = resp.result;
+            
+            if (result === 'null') {
+                that.$message("没有发现该标题公开信，你可以立即写一篇！");
+                return;
+            }
+            console.log(result);
+            result = JSON.parse(result);
+            var textStr = result.title+" 作者：" + result.author+" 正文:  " + result.content
+            console.log(textStr)
+            that.$message(textStr);
+
+        }).catch(function (err) {
+            console.log("error :" + err.message);
+
+        })
+      }
+
+      function test12(that){
+        var to = dappContactAddress;
+        var value = "0";
+        var callFunction = "save";
+        var inputTitle = "aaa", inputContent = "aaabbbbccc"
+        var callArgs = "[\"" + inputTitle + "\",\"" + inputContent + "\"]";
+        console.log(callArgs);
+
+        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            listener: function (resp) {
+                console.log("thecallback is " + resp)
+                that.$message(resp);
+            }
+        });
+      }
+  
+   
+</script>
+<script>
+  new Vue({
+    el: '#app',
+    data: function() {
+      return { visible: false }
+    },
+    methods: {
+      open1() {
+        test11(this)
+      },
+      open2() {
+        test12(this)
+      },
+      
+    }
+  })
+</script>
+
+
+
+</body>
+</html>
