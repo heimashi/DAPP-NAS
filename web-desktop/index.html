@@ -32,7 +32,23 @@
             <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <el-button type="text" style="font-size: 25px; color: black;">套个圈玩法说明</el-button>
                 <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
-                  
+                  <div style="display: flex; flex-direction: column; align-items: flex-start">
+                    <p style="font-size: 15px; color: #606266;">套个圈区块链游戏是一款基于<a href="https://nebulas.io/">星云链</a>公链的开源的公平的博弈类区块链小游戏。游戏完全开源，是休闲类公平博弈游戏，开发者不赚钱任何费用</p>
+
+                    <p>游戏规则如下所示：</p>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;font-size: 12px;">
+                      <div>1、玩家通过玩套个圈游戏获得游戏初始得分</div>
+                      <div>2、然后花费0.01NAS将初始得分写入区块链中，在链中会生成一个1～1000的随机数，初始得分加上此随机数就是游戏的最终得分</div>
+                      <div>3、最终得分根据分数的末尾0的个数得到响应的奖励</div>
+                      <div style="font-size: 10px; color: #909399; margin-top: 20px">
+                          <li>一等奖:最终分数最后三位都是0，此时会获得 50*0.01 NAS加上所有的NAS累积奖金池（若NAS仓库池不够时50倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
+                          <li>二等奖:最终分数最后两位都是0，此时会获得 20*0.01 NAS加上20%的NAS累积奖金池（若NAS仓库池不够时20倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
+                          <li>三等奖:最终分数最后一位都是0，此时会获得 5*0.01 NAS（若NAS仓库池不够时5倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
+                          <li>最终分数末尾没有0则不中奖，此时投入的0.01NAS会80%流入NAS仓库池，20%流入NAS累积奖金池</li>
+                      </div>
+                    </div>
+                  </div>  
+                    
                 </el-card>
             </div>
     </div>
@@ -59,7 +75,7 @@
                   <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 70px">
                     <div>
                         <el-button type="text" style="font-size: 18px; color:#000000;">免费领取NAS:</el-button>
-                        <el-button type="text" style="font-size: 13px; color:#909399;">（每隔一小时可以领取一次）</el-button>
+                        <el-button type="text" style="font-size: 13px; color:#909399;">（每隔两小时可以领取一次）</el-button>
                     </div>
                     
                     <div style="margin-left: 0px">
@@ -87,9 +103,9 @@
 <script src="main.js" charset="utf-8"></script>
 <script>
       "use strict";
-      var dappContactAddress = "n1nf9f4HtJoyVnChZi8cJxT24bEf5UBRZSA";
+      var dappContactAddress = "n1mCm5oHc7FXYasRDiHiNRsDHPKejRu2zse";
       var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
-      neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))//"https://mainnet.nebulas.io"
+      neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))//"https://testnet.nebulas.io"
   
   
       var NebPay = require("nebpay"); 
@@ -144,13 +160,13 @@
 
       
       function tgqPlay(point){
-        var value = '0.0001'
+        var value = '0.01'
         var that = vueInstance
         var to = dappContactAddress;
         var callArgs = "[\""+point+"\"]";
         var options = {
-              //callback: NebPay.config.mainnetUrl //在主网查询(默认值)
-              callback: NebPay.config.testnetUrl, //在测试网查询
+              callback: NebPay.config.mainnetUrl, //在主网查询(默认值)
+              //callback: NebPay.config.testnetUrl, //在测试网查询
               qrcode: {
                     showQRCode: false
                 },
@@ -172,8 +188,8 @@
 
       function funcIntervalQuery() {
             var options = {
-              //callback: NebPay.config.mainnetUrl //在主网查询(默认值)
-              callback: NebPay.config.testnetUrl, //在测试网查询
+              callback: NebPay.config.mainnetUrl //在主网查询(默认值)
+              //callback: NebPay.config.testnetUrl, //在测试网查询
             }
             nebPay.queryPayInfo(serialNumber,options)   //search transaction result from server (result upload to server by app)
                 .then(function (resp) {

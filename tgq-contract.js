@@ -58,7 +58,7 @@ TGQContract.prototype = {
             this.bonusPool = 0;
         } else if (currentPoint%100===0) {
             let tmp = this.tgqPool > this.nasPerQ * 20? (this.tgqPool - this.nasPerQ * 20): this.tgqPool ;
-            awardAmount = new BigNumber(tmp + this.bonusPool);
+            awardAmount = new BigNumber(tmp + this.bonusPool*0.2);
             this.bonusPool = 0;
             let result = Blockchain.transfer(from, awardAmount * 1000000000000000000);
             console.log("transfer result", result);
@@ -77,7 +77,7 @@ TGQContract.prototype = {
             this.bonusPool = this.bonusPool - this.bonusPool*0.2;
         } else if (currentPoint%10===0) {
             let tmp = this.tgqPool > this.nasPerQ * 5? (this.tgqPool - this.nasPerQ * 5): this.tgqPool ;
-            awardAmount = new BigNumber(tmp + this.bonusPool);
+            awardAmount = new BigNumber(tmp);
             let result = Blockchain.transfer(from, awardAmount * 1000000000000000000);
             console.log("transfer result", result);
             if (!result) {
@@ -91,7 +91,7 @@ TGQContract.prototype = {
                 }
             });
 
-            this.tgqPool = this.tgqPool - this.nasPerQ * 5;
+            this.tgqPool = this.tgqPool - tmp;
         }
 
         return [currentPoint, awardAmount, this.tgqPool, this.bonusPool];
