@@ -28,10 +28,10 @@
 <body style="background-color:#606266">
   <div id="app" >
     <div id="app-left" style="float: left;">
-        <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
+        <el-card shadow="always" style="margin: 50px; width: 400px; height: 560px">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <el-button type="text" style="font-size: 25px; color: black;">极速赛车 玩法说明</el-button>
-                <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
+                <el-card shadow="always" style="margin-top: 30px; height: 440px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
                   <div style="display: flex; flex-direction: column; align-items: flex-start">
                     <p style="font-size: 15px; color: #606266;">极速赛车区块链游戏是一款基于<a href="https://nebulas.io/">星云链</a>公链的开源的公平的博弈类赛车竞技类小游戏。游戏智能合约完全开源，开发者不从合约中赚钱任何费用</p>
 
@@ -53,10 +53,10 @@
             </div>
     </div>
     <div id="app-right" style="float: right;">
-        <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
+        <el-card shadow="always" style="margin: 50px; width: 400px; height: 560px">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
                 <el-button type="text" style="font-size: 25px; color: black;">极速赛车 操作区</el-button>
-                <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
+                <el-card shadow="always" style="margin-top: 30px; height: 440px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
                   <div align="left">
                     <el-button type="text" style="font-size: 16px; padding: 5px; color: #606266">NAS仓库池：{{tgqCount}}</el-button>
                     <el-button @click="getTgqPool" icon="el-icon-refresh" type="primary" size="mini" style="background-color: black" circle></el-button>
@@ -89,8 +89,8 @@
         
     </div>
   </div>
-  <div id="GameDiv" style="width:400px; height: 720px; float: center; margin-top: 20px">
-    <canvas id="GameCanvas" width="400" height="720"></canvas>
+  <div id="GameDiv" style="width:400px; height: 660px; float: center; margin-top: 20px">
+    <canvas id="GameCanvas" width="400" height="660"></canvas>
     <div id="splash">
       <div class="progress-bar stripes">
         <span style="width: 0%"></span>
@@ -146,20 +146,25 @@
       }
 
       function racingTryToPlayGame(){ 
-        vueInstance.$confirm("转入0.01NAS来赢取更多NAS！区块链上生成的随机数为10的倍数就获奖（详细规则参考左侧说明）", '游戏提示', {
-          confirmButtonText: '开始区块链游戏',
+        vueInstance.$confirm("转入0.01NAS来加速赛车，赢取更多NAS！区块链上生成的随机数为10的倍数就获奖（详细规则参考左侧说明）", '下一步提示', {
+          confirmButtonText: '加速赛车',
           cancelButtonText: '取消',
           type: 'success',
           center: true
         }).then(function(){
-          tgqPlay(value)
+          racingPlay()
         }).catch(function(){
           
         });
       }
 
       
-      function tgqPlay(point){
+      function racingPlay(){
+        vueInstance.$notify({
+          title: '提示',
+          message: '需要向合约地址投币0.01NAS来参与游戏，等待继续游戏中...',
+          type: 'success'
+        });
         var value = '0.01'
         var that = vueInstance
         var to = dappContactAddress;
@@ -175,12 +180,12 @@
                 }
         }
         serialNumber = nebPay.call(to, value, "racing", callArgs, options);
-        tgqLoading = that.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+        // tgqLoading = that.$loading({
+        //   lock: true,
+        //   text: 'Loading',
+        //   spinner: 'el-icon-loading',
+        //   background: 'rgba(0, 0, 0, 0.7)'
+        // });
         intervalQuery = setInterval(function() {
                 funcIntervalQuery();
             }, 7000);
@@ -242,21 +247,21 @@
             console.log("RESULT2::", resp.result)
             var point = resp.result;
             var resultStr = point;
+            var level = -1;
             if(point%10===0){
-              resultStr+="  恭喜你中了三等奖！NAS已发放"
               vueInstance.getTgqPool()
+              level = 3;
             }else if(point%100===0){
-              resultStr+="  恭喜你中了二等奖！！NAS已发放"
               vueInstance.getTgqPool()
               vueInstance.getBonusPool()
+              level = 2;
             }else if(point%1000===0){
-              resultStr+="  恭喜你中了一等奖！！！NAS已发放"
               vueInstance.getTgqPool()
               vueInstance.getBonusPool()
-            } else{
-              resultStr+="  很遗憾未中奖"
-            }
-            vueInstance.$message("最终分数："+resultStr);
+              level = 1;
+            } 
+            vueInstance.$message("星云链返回得分："+resultStr);
+            cc.find('Canvas').getComponent('GameManager').receviePoint(resultStr, level)
             
         }, function (err) {
           console.log("+++++++++++--ee")
@@ -276,14 +281,14 @@
             var result = resp.result;
             loading.close();
             if (result === 'null') {
-                that.$message("获取套个圈NAS池失败");
+                that.$message("获取极速赛车NAS池失败");
                 return;
             }
             result = JSON.parse(result);
             that.tgqCount = result
         }, function (err) {
             loading.close();
-            that.$message("获取套个圈Nas池失败");
+            that.$message("获取极速赛车Nas池失败");
             console.log("error :" + err.message);
         })
       }
@@ -301,14 +306,14 @@
             var result = resp.result;
             loading.close();
             if (result === 'null') {
-                that.$message("获取套个圈NAS累积奖金池失败");
+                that.$message("获取极速赛车NAS累积奖金池失败");
                 return;
             }
             result = JSON.parse(result);
             that.bonusCount = result
         }, function (err) {
             loading.close();
-            that.$message("获取套个圈Nas累积奖金池失败");
+            that.$message("获取极速赛车Nas累积奖金池失败");
             console.log("error :" + err.message);
         })
       }
