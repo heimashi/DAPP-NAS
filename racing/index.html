@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>套个圈星云链游戏 区块链游戏 NAS免费领取</title>
+  <title>极速赛车-星云链游戏 区块链游戏 NAS免费领取</title>
 
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -25,26 +25,26 @@
   <script src="./libs/nebulas.js"></script>
 
 </head>
-<body style="background-color:#EBEEF5">
+<body style="background-color:#606266">
   <div id="app" >
     <div id="app-left" style="float: left;">
         <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <el-button type="text" style="font-size: 25px; color: black;">套个圈玩法说明</el-button>
+                <el-button type="text" style="font-size: 25px; color: black;">极速赛车 玩法说明</el-button>
                 <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
                   <div style="display: flex; flex-direction: column; align-items: flex-start">
-                    <p style="font-size: 15px; color: #606266;">套个圈区块链游戏是一款基于<a href="https://nebulas.io/">星云链</a>公链的开源的公平的博弈类区块链小游戏。游戏完全开源，是休闲类公平博弈游戏，开发者不赚钱任何费用</p>
+                    <p style="font-size: 15px; color: #606266;">极速赛车区块链游戏是一款基于<a href="https://nebulas.io/">星云链</a>公链的开源的公平的博弈类赛车竞技类小游戏。游戏智能合约完全开源，开发者不从合约中赚钱任何费用</p>
 
                     <p>游戏规则如下所示：</p>
-                    <div style="display: flex; flex-direction: column; align-items: flex-start;font-size: 12px;" align="left">
-                      <div>1、玩家通过玩套个圈游戏获得游戏初始得分</div>
-                      <div>2、然后花费0.01NAS将初始得分写入区块链中，在链中会生成一个1～1000的随机数，初始得分加上此随机数就是游戏的最终得分</div>
-                      <div>3、最终得分根据分数的末尾0的个数得到对应的奖励</div>
-                      <div style="font-size: 10px; color: #909399; margin-top: 20px">
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;font-size: 12px;">
+                      <div align="left">1、玩家可以试玩赛车游戏，试玩不消耗NAS币，按住赛车向后拉一段距离后松手，赛车会启动加速迅速进入冲刺阶段</div>
+                      <div align="left">2、玩家若在区块链上玩赛车，每次需要消耗0.01个NAS币，赛车冲刺过程中会在区块链中会生成一个1～1000的随机数作为最终得分</div>
+                      <div align="left">3、最终得分根据分数的末尾0的个数得到对应的奖励</div>
+                      <div style="font-size: 10px; color: #909399; margin-top: 20px" align="left">
                           <li>一等奖:最终分数最后三位都是0，此时会获得 50*0.01 NAS加上所有的NAS累积奖金池（若NAS仓库池不够时50倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
                           <li>二等奖:最终分数最后两位都是0，此时会获得 20*0.01 NAS加上20%的NAS累积奖金池（若NAS仓库池不够时20倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
                           <li>三等奖:最终分数最后一位都是0，此时会获得 5*0.01 NAS（若NAS仓库池不够时5倍(0.01NAS)时则只能奖励全部NAS仓库池）</li>
-                          <li>最终分数末尾没有0则不中奖，此时投入的0.01NAS会80%流入NAS仓库池，20%流入NAS累积奖金池</li>
+                          <li>最终分数末尾没有0则不中奖，此时投入的0.01NAS币会80%流入到NAS仓库池，20%流入NAS累积奖金池</li>
                       </div>
                     </div>
                   </div>  
@@ -55,7 +55,7 @@
     <div id="app-right" style="float: right;">
         <el-card shadow="always" style="margin: 50px; width: 400px; height: 620px">
             <div style="display: flex; flex-direction: column; align-items: flex-start">
-                <el-button type="text" style="font-size: 25px; color: black;">套个圈操作区</el-button>
+                <el-button type="text" style="font-size: 25px; color: black;">极速赛车 操作区</el-button>
                 <el-card shadow="always" style="margin-top: 30px; height: 460px; width: 360px;display: flex; flex-direction: column; align-items: flex-start; ">
                   <div>
                     <el-button type="text" style="font-size: 16px; padding: 5px; color: #606266">NAS仓库池：{{tgqCount}}</el-button>
@@ -103,7 +103,7 @@
 <script src="main.js" charset="utf-8"></script>
 <script>
       "use strict";
-      var dappContactAddress = "n1mCm5oHc7FXYasRDiHiNRsDHPKejRu2zse";
+      var dappContactAddress = "n1i9PzMHqLH9QskBJjdVg23B8mdb9NtRsYT";
       var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
       neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))//"https://testnet.nebulas.io"
   
@@ -137,7 +137,7 @@
         }
         var to = dappContactAddress;
         var callArgs = "[]";
-        serialNumber = nebPay.call(to, value, "donateTgq", callArgs, {
+        serialNumber = nebPay.call(to, value, "donateRacing", callArgs, {
             listener: function (resp) {
                 console.log("+++" + resp)
                 that.$message("捐赠成功 稍后刷新"+resp);
@@ -145,8 +145,8 @@
         });
       }
 
-      function tgqTryToPlayGame(value){ 
-        vueInstance.$confirm("转入0.01NAS来赢取更多NAS！得分与区块链上的随机数之和为10的倍数就获奖（详细规则参考左侧说明）", '套个圈获得了'+value+'分！', {
+      function racingTryToPlayGame(){ 
+        vueInstance.$confirm("转入0.01NAS来赢取更多NAS！区块链上生成的随机数为10的倍数就获奖（详细规则参考左侧说明）", '游戏提示', {
           confirmButtonText: '开始区块链游戏',
           cancelButtonText: '取消',
           type: 'success',
@@ -163,7 +163,7 @@
         var value = '0.01'
         var that = vueInstance
         var to = dappContactAddress;
-        var callArgs = "[\""+point+"\"]";
+        var callArgs = "[]";
         var options = {
               callback: NebPay.config.mainnetUrl, //在主网查询(默认值)
               //callback: NebPay.config.testnetUrl, //在测试网查询
@@ -174,7 +174,7 @@
                   console.log("---",resp)
                 }
         }
-        serialNumber = nebPay.call(to, value, "tgq", callArgs, options);
+        serialNumber = nebPay.call(to, value, "racing", callArgs, options);
         tgqLoading = that.$loading({
           lock: true,
           text: 'Loading',
@@ -272,7 +272,7 @@
         });
         
         var callArgs = "[]";
-        callNeb("getTgqPool", callArgs, function (resp) {
+        callNeb("getRacingPool", callArgs, function (resp) {
             var result = resp.result;
             loading.close();
             if (result === 'null') {
